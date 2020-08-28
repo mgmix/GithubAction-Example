@@ -1,0 +1,50 @@
+name: GithubAction-Example
+
+on: [push]  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+
+      - name: set up Android SDK Location at local.properties
+        run: echo sdk.dir=/usr/local/lib/android/sdk >> local.properties
+
+      - name: Run Unit Tests
+        run: ./gradlew test
+
+      - name: Build with Gradle
+        run: ./gradlew build
+
+      # - name: Notifiy to Slack
+      #   uses: 8398a7/action-slack@v3.0.3
+      #     with:
+      #       status: ${{ job.status }}
+      #       fields: repo,message,commit,author,action,eventName,ref,workflow # selectable (default: repo,message)
+      #     env:
+      #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # optional
+      #       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOKS_URL }} # required
+      #     if: always() # Pick up events even if the job fails or is canceled.
+      
+
+  parallel:
+      runs-on: ubuntu-latest
+      #needs: build
+      steps:
+        - name: Parallel Jobs Test
+          env:
+            WORD: HELLO WORLD
+            YEAR: 2020
+
+          run: echo $WORD $YEAR
+
+
+
+
+          
